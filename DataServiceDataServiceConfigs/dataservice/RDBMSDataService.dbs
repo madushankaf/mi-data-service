@@ -7,7 +7,7 @@
    </config>
    
    <query id="GetProductPriceDetails" useConfig="Datasource">
-      <sql>select Id, productId, Price from `ProductPric`e where `productId`=:productId</sql>
+      <sql>select Id, productId, Price from `ProductPrice` where `productId`=:productId</sql>
       <result outputType="json">{
          "ProductPrice":{
             "Product":[
