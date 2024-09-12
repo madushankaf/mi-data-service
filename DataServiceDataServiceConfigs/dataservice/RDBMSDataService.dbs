@@ -1,0 +1,76 @@
+<data name="RDBMSDataService" serviceStatus="active" transports="http https local">
+   <config enableOData="false" id="Datasource">
+      <property name="driverClassName">$SYSTEM:DB_DRIVER_CLASS</property>
+      <property name="url">$SYSTEM:DB_CONNECTION_URL</property>
+      <property name="username">$SYSTEM:DB_USER</property>
+      <property name="password">$SYSTEM:DB_PASS</property>
+   </config>
+   
+   <query id="GetProductPriceDetails" useConfig="Datasource">
+      <sql>select Id, productId, Price from ProductPrice where productId=:productId</sql>
+      <result outputType="json">{
+         "ProductPrice":{
+            "Product":[
+               {
+                  "Id":"$Id",
+                  "productId":"$productId",
+                  "Price":"$Price"
+               }
+            ]
+         }
+      }</result>
+      <param name="productId" sqlType="STRING"/>
+   </query>
+   
+   <query id="AddProductPriceDetails" useConfig="Datasource">
+      <sql>insert into ProductPrice (productId, Price) values(:productId, :Price)</sql>
+      <param name="productId" sqlType="STRING"/>
+      <param name="Price" sqlType="DECIMAL"/>
+   </query>
+   
+   <query id="UpdateProductPriceDetails" useConfig="Datasource">
+      <sql>update ProductPrice set Price=:Price where productId=:productId</sql>
+      <param name="Price" sqlType="DECIMAL"/>
+      <param name="productId" sqlType="STRING"/>
+   </query>
+   
+   <operation name="GetProductPriceOp">
+      <call-query href="GetProductPriceDetails">
+         <with-param name="productId" query-param="productId"/>
+      </call-query>
+   </operation>
+   
+   <operation name="AddProductPriceOp">
+      <call-query href="AddProductPriceDetails">
+         <with-param name="productId" query-param="productId"/>
+         <with-param name="Price" query-param="Price"/>
+      </call-query>
+   </operation>
+   
+   <operation name="UpdateProductPriceOp">
+      <call-query href="UpdateProductPriceDetails">
+         <with-param name="Price" query-param="Price"/>
+         <with-param name="productId" query-param="productId"/>
+      </call-query>
+   </operation>
+   
+   <resource method="GET" path="Product/{productId}">
+      <call-query href="GetProductPriceDetails">
+         <with-param name="productId" query-param="productId"/>
+      </call-query>
+   </resource>
+   
+   <resource method="POST" path="Product">
+      <call-query href="AddProductPriceDetails">
+         <with-param name="productId" query-param="productId"/>
+         <with-param name="Price" query-param="Price"/>
+      </call-query>
+   </resource>
+   
+   <resource method="PUT" path="Product">
+      <call-query href="UpdateProductPriceDetails">
+         <with-param name="Price" query-param="Price"/>
+         <with-param name="productId" query-param="productId"/>
+      </call-query>
+   </resource>
+</data>

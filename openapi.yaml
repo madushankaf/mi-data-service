@@ -1,0 +1,93 @@
+openapi: 3.0.1
+info:
+  title: Data service integration
+  description: API Definition of Data service integration
+  version: 1.0.0
+servers:
+  - url: http://localhost:8290
+paths:
+ /services/RDBMSDataService/Product/{productId}:
+    get:
+          parameters:
+            - in: path
+              name: productId
+              schema:
+                type: integer
+              required: true
+              description: Numeric ID of the Product
+              examples:
+                default:
+                  value: 101
+          responses:
+            '200':
+              description: A product object.
+              content:
+                application/json:
+                  schema:
+                    type: object
+                  examples:
+                    success:
+                      value: |
+                        {
+                          "ProductPrice": {
+                            "Product": [
+                              {
+                                "Id": "1",
+                                "productId": "101",
+                                "Price": "150.00"
+                              }
+                            ]
+                          }
+                        }
+    put:
+          requestBody:
+            required: true
+            content:
+              application/json:
+                schema:
+                  type: object
+                examples:
+                  default:
+                    value:
+                      product_defined_value:
+                        productId: '103'
+                        Price: '300.75'
+          responses:
+            default:
+              description: Default response
+              content:
+                application/json:
+                  examples:
+                    default:
+                      value: |
+                        {
+                          "productId": "103",
+                          "Price": "300.75"
+                        }
+/services/RDBMSDataService/Product:
+    post:
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                default:
+                  value:
+                    product_defined_value:
+                      productId: '102'
+                      Price: '250.50'
+        responses:
+          default:
+            description: Default response
+            content:
+              application/json:
+                examples:
+                  default:
+                    value: |
+                      {
+                        "Id": "2",
+                        "productId": "102",
+                        "Price": "250.50"
+                      }                 
